@@ -30,19 +30,11 @@ def _fill_missing_total_charges(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _engineer_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Derived features. Must run BEFORE binary encoding so service columns
-    are still 'Yes'/'No'/'No internet service' strings."""
+    """Derived features. Must run BEFORE binary encoding so service
+    columns are still 'Yes'/'No'/'No internet service' strings."""
     df = df.copy()
 
-    # 1) Tenure buckets
-    df["tenure_group"] = pd.cut(
-        df["tenure"],
-        bins=cfg.TENURE_BINS,
-        labels=cfg.TENURE_LABELS,
-        include_lowest=True,
-    ).astype("string")
-
-    # 2) Count of subscribed services (0..8); only 'Yes' counts.
+    # 1) Count of subscribed services (0..8); only 'Yes' counts.
     service_cols = [
         "PhoneService",
         "MultipleLines",
@@ -53,13 +45,9 @@ def _engineer_features(df: pd.DataFrame) -> pd.DataFrame:
         "StreamingTV",
         "StreamingMovies",
     ]
-    df["TotalServices"] = (
-        df[service_cols]
-        .apply(lambda row: int((row == "Yes").sum()), axis=1)
-        .astype("int8")
-    )
+    df["TotalServices"] = df[service_cols].eq("Yes").sum(axis=1).astype("int8")
 
-    # 3) Average monthly charge; tenure == 0 → use MonthlyCharges
+    # 2) Average monthly charge; tenure == 0 → use MonthlyCharges.
     df["AvgMonthlyCharge"] = np.where(
         df["tenure"] > 0,
         df["TotalCharges"] / df["tenure"],

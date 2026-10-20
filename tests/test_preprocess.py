@@ -31,7 +31,7 @@ def test_totalcharges_is_numeric(cleaned):
 
 
 def test_derived_features_present(cleaned):
-    for col in ["tenure_group", "TotalServices", "AvgMonthlyCharge"]:
+    for col in ["TotalServices", "AvgMonthlyCharge"]:  # ← drop tenure_group
         assert col in cleaned.columns, f"missing derived feature {col}"
 
 
@@ -53,14 +53,3 @@ def test_split_shapes(cleaned):
     X, y = split_features_target(cleaned)
     assert len(X) == len(y) == len(cleaned)
     assert TARGET_COL not in X.columns
-
-
-def test_tenure_zero_captured_in_first_bin(cleaned):
-    raw = load_raw_data()
-    mask = raw["tenure"] == 0
-    assert mask.sum() > 0
-    assert cleaned.loc[mask.values, "tenure_group"].eq("0-12").all()
-
-
-def test_tenure_group_has_no_nulls(cleaned):
-    assert cleaned["tenure_group"].notna().all()

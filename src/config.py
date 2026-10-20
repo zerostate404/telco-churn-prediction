@@ -53,7 +53,7 @@ MULTICAT_FEATURES = [
 
 # ---------- Derived features (created in preprocess.py) ----------
 DERIVED_NUMERIC_FEATURES = ["TotalServices", "AvgMonthlyCharge"]
-DERIVED_CATEGORICAL_FEATURES = ["tenure_group"]
+DERIVED_CATEGORICAL_FEATURES = []  # tenure bins dropped: collinear with raw tenure
 
 # ---------- Feature engineering parameters ----------
 TENURE_BINS = [0, 12, 24, 36, 48, 60, 72]
