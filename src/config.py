@@ -31,7 +31,6 @@ BINARY_FEATURES = [
     "Dependents",
     "PhoneService",
     "PaperlessBilling",
-    "Churn",
 ]
 
 PRE_ENCODED_BINARY_FEATURES = ["SeniorCitizen"]
